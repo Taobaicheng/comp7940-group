@@ -6,6 +6,8 @@ from pymongo.server_api import ServerApi
 import configparser
 import logging
 #import redis
+import urllib.parse
+
 
 
 from ChatGPT_HKBU import HKBU_ChatGPT
@@ -49,6 +51,7 @@ def main():
 # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("add", add))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("map", map_command))
 # To start the bot:
     updater.start_polling()
     updater.idle()
@@ -78,6 +81,20 @@ def add(update: Update, context: CallbackContext) -> None:
 
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /add <keyword>')
+
+def map_command(update: Update, context: CallbackContext) -> None:
+    if not context.args:
+        update.message.reply_text('Usage: /map <location>')
+        return
+    
+    try:
+        location = " ".join(context.args)
+        encoded_location = urllib.parse.quote(location)
+        map_url = f"https://www.google.com/maps?q={encoded_location}"
+        update.message.reply_text(f"📍 这里是为您找到的 {location} 的位置：\n{map_url}")
+    except Exception as e:
+        logging.error(f"处理 /map 命令时出错: {str(e)}")
+        update.message.reply_text("⚠️ 获取位置信息时出现错误，请稍后再试。")
 
 if __name__ == '__main__':
     main()
