@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackContext)
+from telegram.ext import (Updater, CommandHandler, MessageHandler, filters, CallbackContext)
 from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -8,7 +8,24 @@ import logging
 #import redis
 import urllib.parse
 import os
+import asyncio
 from flask import Flask
+
+app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("✅ Bot is running on Render!")
+
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(update.message.text)
+
+app.add_handler(CommandHandler("start", start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+async def main():
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()  
+    await asyncio.Future() 
 
 app = Flask(__name__)
 
@@ -106,5 +123,6 @@ def map_command(update: Update, context: CallbackContext) -> None:
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))  
     app.run(host='0.0.0.0', port=port)
+    asyncio.run(main())
 
 
