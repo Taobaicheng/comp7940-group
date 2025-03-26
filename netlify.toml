@@ -1,6 +1,6 @@
 # example netlify.toml
 [build]
-  command = "sudo apt-get update && sudo apt-get install -y libjpeg-dev zlib1g-dev && pip install -r requirements.txt -t ./python"
+  command = "pip install -r requirements.txt -t ./python"
   
 [build.environment]
   PYTHON_VERSION = "3.11"
