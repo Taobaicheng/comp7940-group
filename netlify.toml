@@ -1,16 +1,10 @@
 # example netlify.toml
 [build]
-  command = "pip install -r requirements.txt && gunicorn chatbot:app -b 0.0.0.0:$PORT"
-  functions = "netlify/functions"
-
-[context.production.environment]
-  PORT = "8080"
+  command = "pip install -r requirements.txt -t ./python"
  
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
-
-  [functions.runtime]
-    include_files = ["config.ini"]
 
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
