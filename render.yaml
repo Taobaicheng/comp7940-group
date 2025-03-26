@@ -1,12 +1,16 @@
 services:
-  - type: workr
+  - type: web
     name: chatbot
     runtime: python
     plan: free
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: python chatbot.py
+    startCommand: python -m chatbot
     envVars:
       - key: PORT
         value: 10000
+      - key: TELEGRAM_ACCESS_TOKEN
+        value: 7389327487:AAEEnsk1JMj8fan1bUFSPV30nQ4_gtfBuxA
+      - key: CHATGP_ACCESS_TOKEN
+        value: 1de3005e-32a5-4438-84d1-13759a010d6f 
