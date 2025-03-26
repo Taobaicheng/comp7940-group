@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: chatbot
+    env: python
+    region: fra
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python chatbot.py
+    ports:
+      - port: 8000
+        protocol: tcp

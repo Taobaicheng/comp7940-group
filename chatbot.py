@@ -97,6 +97,6 @@ def map_command(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("⚠️ 获取位置信息时出现错误，请稍后再试。")
 
 if __name__ == '__main__':
-    main()
+    chatbot.run(host='0.0.0.0', port=8000)
 
 
