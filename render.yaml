@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: chatbot
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: gunicorn chatbot:app
+    envVars:
+      - key: PORT
+        value: 10000
