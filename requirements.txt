@@ -1,5 +1,5 @@
 telegram
 configparser
-mongodb
+pymongo
 flask
 serverless-wsgi
