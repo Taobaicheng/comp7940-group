@@ -3,3 +3,4 @@ configparser
 pymongo
 flask
 serverless-wsgi
+gunicorn==20.1.0
