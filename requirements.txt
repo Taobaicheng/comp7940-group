@@ -1,3 +1,5 @@
 telegram
 configparser
-redis
+mongodb
+flask
+serverless-wsgi
