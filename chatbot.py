@@ -10,9 +10,9 @@ import urllib.parse
 import os
 from flask import Flask
 
-chatbot = Flask(__name__)
+app = Flask(__name__)
 
-@chatbot.route('/')
+@app.route('/')
 def hello():
     return "Hello Render!"
 
@@ -105,6 +105,6 @@ def map_command(update: Update, context: CallbackContext) -> None:
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))  
-    chatbot.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port)
 
 

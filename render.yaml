@@ -1,5 +1,5 @@
 services:
-  - type: web
+  - type: work
     name: chatbot
     runtime: python
     plan: free
