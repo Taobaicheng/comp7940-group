@@ -7,8 +7,14 @@ import configparser
 import logging
 #import redis
 import urllib.parse
+import os
+from flask import Flask
 
+app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return "Hello from Render!"
 
 from ChatGPT_HKBU import HKBU_ChatGPT
 
@@ -98,5 +104,6 @@ def map_command(update: Update, context: CallbackContext) -> None:
 
 if __name__ == '__main__':
     main()
-
+    port = int(os.environ.get("PORT", 8080))  # 从环境变量读取端口
+    app.run(host="0.0.0.0", port=port)       # 必须绑定到 0.0.0.0
 

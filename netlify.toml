@@ -1,7 +1,8 @@
 # example netlify.toml
 [build]
-  command = "pip install -r requirements.txt -t ./python"
-  
+  command = "pip install -r requirements.txt && python chatbot.py"
+  pubilsh = "public"
+
 [build.environment]
   PYTHON_VERSION = "3.11"
  
