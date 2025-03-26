@@ -1,13 +1,14 @@
 services:
   - type: web
     name: chatbot
-    env: python
+    runtime:python
     envVars:
-      PYTHON_VERSION:3.11
+      - key: PYTHON_VERSION
+        value:3.11.9
     region: fra
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python chatbot.py
     ports:
-      - port: 8000
+      - port: 10000
         protocol: tcp

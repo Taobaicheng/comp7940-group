@@ -7,7 +7,14 @@ import configparser
 import logging
 #import redis
 import urllib.parse
+import os
+from flask import Flask
 
+chatbot = Flask(__name__)
+
+@chatbot.route('/')
+def hello():
+    return "Hello Render!"
 
 
 from ChatGPT_HKBU import HKBU_ChatGPT
@@ -97,6 +104,7 @@ def map_command(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("⚠️ 获取位置信息时出现错误，请稍后再试。")
 
 if __name__ == '__main__':
-    chatbot.run(host='0.0.0.0', port=8000)
+    port = int(os.environ.get("PORT", 10000))  
+    chatbot.run(host='0.0.0.0', port=port)
 
 
