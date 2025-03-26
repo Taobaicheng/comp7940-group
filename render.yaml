@@ -1,12 +1,12 @@
 services:
-  - type: work
+  - type: workr
     name: chatbot
     runtime: python
     plan: free
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: gunicorn chatbot:app
+    startCommand: python chatbot.py
     envVars:
       - key: PORT
         value: 10000
