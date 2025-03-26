@@ -5,6 +5,7 @@ services:
     plan: free
     buildCommand: |
       pip install --upgrade pip
+      pip uninstall -y httpx httpcore h11
       pip install -r requirements.txt
     startCommand: python -m chatbot
     envVars:
