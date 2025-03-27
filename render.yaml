@@ -6,7 +6,7 @@ services:
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: gunicorn chatbot:flask_app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn chatbot:flask_app --worker-class gevent --bind 0.0.0.0:$PORT
     envVars:
       - key: PORT
         value: 10000
