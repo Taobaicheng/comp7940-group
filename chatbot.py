@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import (Updater, CommandHandler, MessageHandler, filters, CallbackContext)
+from telegram.ext import (ApplicationBuilder, CommandHandler, MessageHandler, filters, CallbackContext)
 from pymongo import MongoClient
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -9,30 +9,26 @@ import logging
 import urllib.parse
 import os
 import asyncio
-from flask import Flask
+from flask import Flask, request
 
 app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+flask_app = Flask(__name__)
+
+async def start(update: Update, context):
     await update.message.reply_text("✅ Bot is running on Render!")
 
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def echo(update: Update, context):
     await update.message.reply_text(update.message.text)
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+@app.route('/webhook', methods=['POST'])
+async def webhook():
+    update = Update.de_json(request.get_json(force=True), app.bot)
+    await app.process_update(update)
+    return 'OK'
 
 async def main():
-    await app.initialize()
-    await app.start()
-    await app.updater.start_polling()  
-    await asyncio.Future() 
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return "Hello Render!"
-
+    await app.bot.set_webhook(f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook")
+    flask_app.run(host='0.0.0.0', port=os.environ.get('PORT', 10000))
 
 from ChatGPT_HKBU import HKBU_ChatGPT
 
