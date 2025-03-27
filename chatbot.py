@@ -20,9 +20,12 @@ async def start(update: Update, context):
 async def echo(update: Update, context):
     await update.message.reply_text(update.message.text)
 
+telegram_app.add_handler(CommandHandler("start", start))
+telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
 @flask_app.route('/webhook', methods=['POST'])
 async def webhook():
-    update = Update.de_json(request.get_json(force=True), app.bot)
+    update = Update.de_json(request.get_json(force=True), telegram_app.bot)
     await flask_app.process_update(update)
     return 'OK'
 
