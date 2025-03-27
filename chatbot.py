@@ -11,27 +11,29 @@ import os
 import asyncio
 from flask import Flask, request
 
-telegram_app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
+
 flask_app = Flask(__name__)
+telegram_app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
 
-async def start(update: Update, context):
-    await update.message.reply_text("✅ Bot is running on Render!")
+#async def start(update: Update, context):
+    #await update.message.reply_text("✅ Bot is running on Render!")
 
-async def echo(update: Update, context):
-    await update.message.reply_text(update.message.text)
+#async def echo(update: Update, context):
+    #await update.message.reply_text(update.message.text)
 
-telegram_app.add_handler(CommandHandler("start", start))
-telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+#async def main():
+    #await flask_app.bot.set_webhook(f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook")
+    #flask_app.run(host='0.0.0.0', port=os.environ.get('PORT', 10000))
+
+#telegram_app.add_handler(CommandHandler("start", start))
+#telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
 @flask_app.route('/webhook', methods=['POST'])
-async def webhook():
+def webhook():
     update = Update.de_json(request.get_json(force=True), telegram_app.bot)
-    await flask_app.process_update(update)
+    telegram_app.update_queue.put(update)
     return 'OK'
 
-async def main():
-    await flask_app.bot.set_webhook(f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook")
-    flask_app.run(host='0.0.0.0', port=os.environ.get('PORT', 10000))
 
 from ChatGPT_HKBU import HKBU_ChatGPT
 
@@ -120,6 +122,10 @@ def map_command(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("⚠️ 获取位置信息时出现错误，请稍后再试。")
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    telegram_app.run_webhook(
+        listen='0.0.0.0',
+        port=10000,
+        webhook_url=f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook"
+    )
 
 
