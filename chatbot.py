@@ -11,7 +11,7 @@ import os
 import asyncio
 from flask import Flask, request
 
-app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
+telegram_app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
 flask_app = Flask(__name__)
 
 async def start(update: Update, context):
@@ -20,14 +20,14 @@ async def start(update: Update, context):
 async def echo(update: Update, context):
     await update.message.reply_text(update.message.text)
 
-@app.route('/webhook', methods=['POST'])
+@flask_app.route('/webhook', methods=['POST'])
 async def webhook():
     update = Update.de_json(request.get_json(force=True), app.bot)
-    await app.process_update(update)
+    await flask_app.process_update(update)
     return 'OK'
 
 async def main():
-    await app.bot.set_webhook(f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook")
+    await flask_app.bot.set_webhook(f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook")
     flask_app.run(host='0.0.0.0', port=os.environ.get('PORT', 10000))
 
 from ChatGPT_HKBU import HKBU_ChatGPT
@@ -117,8 +117,6 @@ def map_command(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("⚠️ 获取位置信息时出现错误，请稍后再试。")
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  
-    app.run(host='0.0.0.0', port=port)
     asyncio.run(main())
 
 
