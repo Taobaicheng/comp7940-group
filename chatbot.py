@@ -6,8 +6,7 @@ from telegram.ext import (
     MessageHandler,
     filters,
     ContextTypes
-)
-from pymongo import MongoClient
+)  # 修正括号闭合
 import os
 import logging
 import urllib.parse
@@ -35,13 +34,9 @@ async def map_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"📍 位置：\nhttps://www.google.com/maps?q={encoded}")
 
 # 添加处理程序
-handlers = [
-    CommandHandler("start", start),
-    CommandHandler("help", help_command),
-    CommandHandler("map", map_command)
-]
-for handler in handlers:
-    telegram_app.add_handler(handler)
+telegram_app.add_handler(CommandHandler("start", start))
+telegram_app.add_handler(CommandHandler("help", help_command))
+telegram_app.add_handler(CommandHandler("map", map_command))
 
 # Webhook路由（必须保留）
 @flask_app.route('/webhook', methods=['POST'])
@@ -52,8 +47,6 @@ def webhook():
 
 # 初始化Webhook（仅需运行一次）
 if __name__ == '__main__':
-    telegram_app.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.getenv("PORT", 10000)),
-        webhook_url=f"https://{os.environ['RENDER_EXTERNAL_HOSTNAME']}/webhook"
-    )
+    # 移除旧启动方式
+    # telegram_app.run_webhook(...)
+    pass

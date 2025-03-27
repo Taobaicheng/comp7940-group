@@ -6,11 +6,12 @@ services:
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-    startCommand: gunicorn chatbot:flask_app --worker-class gevent --bind 0.0.0.0:$PORT
+    startCommand: |
+      gunicorn chatbot:flask_app --worker-class gevent --bind 0.0.0.0:$PORT
     envVars:
       - key: PORT
         value: 10000
       - key: TELEGRAM_TOKEN
         value: 7389327487:AAEEnsk1JMj8fan1bUFSPV30nQ4_gtfBuxA
       - key: CHATGPT_ACCESS_TOKEN
-        value: 1de3005e-32a5-4438-84d1-13759a010d6f 
+        value: 1de3005e-32a5-4438-84d1-13759a010d6f
